@@ -27,11 +27,12 @@ ENV HOME=$ROOTHOME
 #     && rm -rf /var/lib/apt/lists/* 
 
 # install maven
-RUN curl -LO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
-    && tar -zxvf apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /usr/local/lib/ \
-    && rm apache-maven-${MAVEN_VERSION}-bin.tar.gz
+RUN curl -LO https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
+    && tar -zxvf apache-maven-3.8.5-bin.tar.gz -C /usr/local/lib/ \
+    && rm apache-maven-3.8.5-bin.tar.gz
 
-ENV PATH="/usr/local/lib/apache-maven-${MAVEN_VERSION}/bin:${PATH}"
+ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5"
+ENV PATH="/usr/local/lib/apache-maven-3.8.5/bin:${PATH}"
 
 # update timezone
 ENV TZ Asia/Shanghai
