@@ -1,10 +1,10 @@
 ARG ORACLE_JDK_VERSION=jdk-8u202
-ARG MAVEN_VERSION=3.8.6
 
 FROM cacotopia/oracle-jdk:${ORACLE_JDK_VERSION}
 
 LABEL Author="cacotopia@126.com"
 
+ARG MAVEN_VERSION=3.8.6
 ARG ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
@@ -33,7 +33,7 @@ ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.6" \
 
 RUN mkdir -p ${MAVEN_HOME} \
     && cd /tmp \
-    && wget --no-check-certificate "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+    && wget --no-check-certificate "https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz" \
     && tar -xzf "apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "${MAVEN_HOME}" --strip-components=1 \ 
     && ln -s ${MAVEN_HOME}/bin/* /usr/bin/ \
     && rm apache-maven-"${MAVEN_VERSION}"-bin.tar.gz \
