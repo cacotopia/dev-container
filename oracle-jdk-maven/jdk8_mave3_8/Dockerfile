@@ -30,7 +30,9 @@ ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5" \
 #     && rm -rf /var/lib/apt/lists/* 
 
 # install maven
-RUN curl -LO https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
+
+RUN && mkdir -p ${MAVEN_HOME} \
+    curl -LO https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
     && tar -xzf apache-maven-3.8.5-bin.tar.gz -C "${MAVEN_HOME}" --strip-components=1 \ 
     && ln -s ${MAVEN_HOME}/bin/* /usr/bin/ \
     && rm apache-maven-3.8.5-bin.tar.gz
