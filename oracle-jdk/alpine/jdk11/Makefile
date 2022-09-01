@@ -49,12 +49,12 @@ buildx-latest:
 ## Docker image push
 release: build tag_latest
 	docker push $(FULLNAME):${TAG}
-	@echo "Create a tag v-$(VERSION)"
-	@git tag v-$(VERSION)
+	@echo "Create a tag v-$(TAG)"
+	@git tag v-$(TAG)
 	@git push origin v-$(TAG)
 
 release-latest: ## Docker image push
-	docker push ${IMAGE}:latest
+	docker push ${FULLNAME}:latest
 
 debug:
 	@docker run -t -i $(FULLNAME):$(TAG) /bin/bash
@@ -65,7 +65,7 @@ save:
 	@echo "Image $(FULLNAME):$(TAG) exported to $(OUTPUT_FILE)"
 
 run:
-	@echo "IPAddress =" $$(docker inspect --format '{{.NetworkSettings.IPAddress}}' $$(docker run -d $(FULLNAME):$(VERSION)))
+	@echo "IPAddress =" $$(docker inspect --format '{{.NetworkSettings.IPAddress}}' $$(docker run -d $(FULLNAME):$(TAG)))
 
 start:
 	@docker-machine start default
