@@ -1,5 +1,5 @@
 ARG ORACLE_JDK_VERSION=jdk-8u202
-ARG MAVEN_VERSION=3.8.5
+ARG MAVEN_VERSION=3.8.6
 
 FROM cacotopia/oracle-jdk:${ORACLE_JDK_VERSION}
 
@@ -9,7 +9,7 @@ ARG ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
 
-ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5" \
+ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.6" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
 #========================
@@ -32,10 +32,10 @@ ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5" \
 # install maven
 
 RUN mkdir -p ${MAVEN_HOME} \
-    && curl -LO https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
-    && tar -xzf apache-maven-3.8.5-bin.tar.gz -C "${MAVEN_HOME}" --strip-components=1 \ 
+    && curl -LO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    && tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz -C "${MAVEN_HOME}" --strip-components=1 \ 
     && ln -s ${MAVEN_HOME}/bin/* /usr/bin/ \
-    && rm apache-maven-3.8.5-bin.tar.gz
+    && rm apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
 # update timezone
 ENV TZ Asia/Shanghai
