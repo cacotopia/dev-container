@@ -1,9 +1,15 @@
+#!/usr/bin/make
+SHELL=/bin/bash
+
 NAMESPACE = cacotopia
 NAME = oracle-jdk
 FULLNAME = $(NAMESPACE)/$(NAME)
-VERSION = jdk-8u112
+TAG = jdk-8u202
+LATEST_TAG = latest
 
-.PHONY: all clean build tag_latest release debug run save start usage
+.DEFAULT_GOAL := help
+.PHONY: help
+# .PHONY: all clean build tag_latest release debug run save start usage
 
 all: usage build
 
@@ -13,26 +19,50 @@ clean:
 	@if docker images $(FULLNAME) | awk '{ print $$2 }' | grep -q -F $(VERSION); then docker rmi -f $(FULLNAME):$(VERSION); fi
 	@if docker images $(FULLNAME) | awk '{ print $$2 }' | grep -q -F latest; then docker rmi -f $(FULLNAME):latest; fi
 
-
+## Docker image build
 build: clean
-	docker build -t $(FULLNAME):$(VERSION) --rm .
+	docker build -t $(FULLNAME):$(TAG) -f Dockerfile --rm .
+
+ ## Docker image build
+build-latest:
+	docker build -t ${FULLNAME}:$(LATEST_TAG) -f Dockerfile ./
 
 tag_latest:
-	@docker tag $(FULLNAME):$(VERSION) $(FULLNAME):latest
+	docker tag $(FULLNAME):$(TAG) $(FULLNAME):$(LATEST_TAG)
 
+## Docker image build multi-platform
+buildx: 
+	docker buildx build \
+	    --push \
+        --platform=linux/amd64,linux/arm64 \
+        --tag=${FULLNAME}:${TAG} \
+        -f Dockerfile ./
+
+## Docker image build multi-platform
+buildx-latest: 
+	docker buildx build \
+	    --push \
+        --platform=linux/amd64,linux/arm64 \
+        --tag=${FULLNAME}:$(LATEST_TAG) \
+        -f Dockerfile ./
+
+## Docker image push
 release: build tag_latest
-	docker push $(FULLNAME)
+	docker push $(FULLNAME):${TAG}
 	@echo "Create a tag v-$(VERSION)"
 	@git tag v-$(VERSION)
-	@git push origin v-$(VERSION)
+	@git push origin v-$(TAG)
+
+release-latest: ## Docker image push
+	docker push ${IMAGE}:latest
 
 debug:
-	@docker run -t -i $(FULLNAME):$(VERSION) /bin/bash
+	@docker run -t -i $(FULLNAME):$(TAG) /bin/bash
 
 save:
-	@OUTPUT_FILE =  $(NAME)_$(VERSION)_`date +%Y%m%d%H%M%S`.tgz
-	@docker save $(FULLNAME):$(VERSION) | gzip --best --stdout  > $(OUTPUT_FILE)
-	@echo "Image $(FULLNAME):$(VERSION) exported to $(OUTPUT_FILE)"
+	@OUTPUT_FILE =  $(NAME)_$(TAG)_`date +%Y%m%d%H%M%S`.tgz
+	@docker save $(FULLNAME):$(TAG) | gzip --best --stdout  > $(OUTPUT_FILE)
+	@echo "Image $(FULLNAME):$(TAG) exported to $(OUTPUT_FILE)"
 
 run:
 	@echo "IPAddress =" $$(docker inspect --format '{{.NetworkSettings.IPAddress}}' $$(docker run -d $(FULLNAME):$(VERSION)))
@@ -40,6 +70,10 @@ run:
 start:
 	@docker-machine start default
 	@eval "$(docker-machine env default)"
+
+help: ## Show this help
+	@printf "\033[33m%s:\033[0m\n" 'Available commands'
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[32m%-14s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 usage:
 	@echo "List of target"
