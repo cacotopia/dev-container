@@ -9,6 +9,9 @@ ARG ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
 
+ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5" \
+    PATH=$PATH:${MAVEN_HOME}/bin 
+
 #========================
 # Replace repositories to China Mirror
 # https://mirrors.ustc.edu.cn/help/alpine.html
@@ -28,11 +31,9 @@ ENV HOME=$ROOTHOME
 
 # install maven
 RUN curl -LO https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz \
-    && tar -zxvf apache-maven-3.8.5-bin.tar.gz -C /usr/local/lib/ \
+    && tar -xzf apache-maven-3.8.5-bin.tar.gz -C "${MAVEN_HOME}" --strip-components=1 \ 
+    && ln -s ${MAVEN_HOME}/bin/* /usr/bin/ \
     && rm apache-maven-3.8.5-bin.tar.gz
-
-ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.5"
-ENV PATH="/usr/local/lib/apache-maven-3.8.5/bin:${PATH}"
 
 # update timezone
 ENV TZ Asia/Shanghai
