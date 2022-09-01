@@ -32,10 +32,12 @@ ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.6" \
 # install maven
 
 RUN mkdir -p ${MAVEN_HOME} \
-    && curl -LO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    && cd /tmp \
+    && wget --no-check-certificate https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz -C "${MAVEN_HOME}" --strip-components=1 \ 
     && ln -s ${MAVEN_HOME}/bin/* /usr/bin/ \
-    && rm apache-maven-${MAVEN_VERSION}-bin.tar.gz
+    && rm apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    && rm -rf /tmp/*
 
 # update timezone
 ENV TZ Asia/Shanghai
