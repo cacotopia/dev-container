@@ -15,9 +15,6 @@ ENV HOME=$ROOTHOME
 #========================
 #RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
-RUN apk update \
-    && apk add --no-cache ca-certificates bash git openssh zip subversion sshpass curl
-
 # RUN apt-get update --allow-unauthenticated \
 #     && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
 #            build-essential gcc g++ \
@@ -32,7 +29,7 @@ RUN apk update \
 # install maven
 RUN curl -LO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
     && tar -zxvf apache-maven-${MAVEN_VERSION}-bin.tar.gz -C /usr/local/lib/ \
-    && rm apache-maven-{MAVEN_VERSION}-bin.tar.gz
+    && rm apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
 ENV PATH="/usr/local/lib/apache-maven-${MAVEN_VERSION}/bin:${PATH}"
 
