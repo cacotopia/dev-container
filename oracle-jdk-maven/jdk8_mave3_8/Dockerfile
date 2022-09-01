@@ -9,16 +9,25 @@ ARG ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
 
-RUN apt-get update --allow-unauthenticated \
-    && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
-           build-essential gcc g++ \
-           tzdata zip unzip vim wget \
-           git openssh-client zsh bash net-tools tmux sudo wget \
-    #
-    # Clean up
-    && apt-get autoremove -y \
-    && apt-get clean -y \
-    && rm -rf /var/lib/apt/lists/* 
+#========================
+# Replace repositories to China Mirror
+# https://mirrors.ustc.edu.cn/help/alpine.html
+#========================
+#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
+
+RUN apk update \
+    && apk add --no-cache ca-certificates bash git openssh zip subversion sshpass curl
+
+# RUN apt-get update --allow-unauthenticated \
+#     && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
+#            build-essential gcc g++ \
+#            tzdata zip unzip vim wget \
+#            git openssh-client zsh bash net-tools tmux sudo wget \
+#     #
+#     # Clean up
+#     && apt-get autoremove -y \
+#     && apt-get clean -y \
+#     && rm -rf /var/lib/apt/lists/* 
 
 # install maven
 RUN curl -LO https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
