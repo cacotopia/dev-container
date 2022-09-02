@@ -39,13 +39,6 @@ RUN mkdir -p ${MAVEN_HOME} \
     && rm apache-maven-"${MAVEN_VERSION}"-bin.tar.gz \
     && rm -rf /tmp/*
 
-# update timezone
-ENV TZ Asia/Shanghai
-RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# Mark zsh as default shell
-RUN chsh -s /usr/bin/zsh
-
 # RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.1/zsh-in-docker.sh)" -- \
 COPY ../../zsh/zsh-in-docker.sh /tmp
 RUN chmod +x /tmp/zsh-in-docker.sh && \

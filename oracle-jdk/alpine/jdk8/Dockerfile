@@ -21,13 +21,23 @@ ENV LANG=en_US.UTF-8 \
 #RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
 RUN apk update \
-    && apk add --no-cache ca-certificates bash git openssh zip subversion sshpass curl tzdata
+    && apk add --no-cache ca-certificates bash zsh openssh openssh-client zip unzip \
+     git subversion sshpass curl wget tzdata \
+     net-tools tmux sudo vim
+
+# update timezone
+ENV TZ Asia/Shanghai
+
+RUN cp /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# Mark zsh as default shell
+RUN chsh -s /usr/bin/zsh
 
 #====================
 # Install GNU Libc
 #====================
 
-RUN apk add --no-cache --virtual=build-dependencies wget \
+RUN apk add --no-cache --virtual=build-dependencies \
     && ALPINE_GLIBC_BASE_URL="${GLIBC_BASE_URL}/${GLIBC_PACKAGE_VERSION}" \
     && ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-${GLIBC_PACKAGE_VERSION}.apk" \
     && ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-${GLIBC_PACKAGE_VERSION}.apk" \
@@ -49,7 +59,7 @@ RUN apk add --no-cache --virtual=build-dependencies wget \
 #==============
 # Install Oracle JDK
 #==============
-RUN apk add --no-cache --virtual=build-dependencies wget unzip \
+RUN apk add --no-cache --virtual=build-dependencies \
     && mkdir -p /opt/java \
     && cd /tmp \
     && wget --no-check-certificate "${JAVA_BASE_MIRRORS_URL}/jdk/${JAVA_VERSION}u${JAVA_UPDATE}-b${JAVA_UPDATE_SMALL_VERSION}/jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-x64.tar.gz" \
