@@ -7,9 +7,10 @@ LABEL Author="cacotopia@126.com"
 ENV ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
-ENV GRADLE_VERSION 7.5.1
+
 ENV GRADLE_HOME="/opt/gradle" \
-    MAVEN_CONFIG="${HOME}/.m2" \
+    GRADLE_VERSION="7.5.1" \
+    GRADLE_CONFIG="${HOME}/.m2" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
 ARG GRADLE_DOWNLOAD_SHA256=f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4
@@ -98,7 +99,7 @@ RUN chsh -s /usr/bin/zsh
 
 RUN mkdir $ROOTHOME/.m2
 
-COPY ./mvn/settings.xml $ROOTHOME/.m2/
+# COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
 ENTRYPOINT [ "/bin/zsh" ]
 

@@ -88,6 +88,7 @@ RUN mkdir $ROOTHOME/.m2
 
 COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
-ENTRYPOINT [ "/bin/zsh" ]
+# ENTRYPOINT [ "/bin/zsh" ]
 
+# CMD ["-l"]
 CMD ["mvn"]
