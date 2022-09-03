@@ -1,5 +1,6 @@
-FROM ubuntu:latest
-MAINTAINER SgrAlpha <admin@mail.sgr.io>
+FROM ubuntu:20.04
+
+LABEL Author="cacotopia@126.com"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     JAVA_HOME=/usr/lib/jvm/java-14-oracle

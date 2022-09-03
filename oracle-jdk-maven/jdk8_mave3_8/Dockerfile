@@ -12,12 +12,6 @@ ENV HOME=$ROOTHOME
 ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.6" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
-#========================
-# Replace repositories to China Mirror
-# https://mirrors.ustc.edu.cn/help/alpine.html
-#========================
-#RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-
 # RUN apt-get update --allow-unauthenticated \
 #     && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
 #            build-essential gcc g++ \
