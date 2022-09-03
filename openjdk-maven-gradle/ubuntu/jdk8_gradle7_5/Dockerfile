@@ -4,14 +4,15 @@ FROM cacotopia/oracle-jdk:${ORACLE_JDK_VERSION}
 
 LABEL Author="cacotopia@126.com"
 
-ENV MAVEN_VERSION=3.8.6
 ENV ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
-
-ENV MAVEN_HOME="/opt/maven" \
+ENV GRADLE_VERSION 7.5.1
+ENV GRADLE_HOME="/opt/gradle" \
     MAVEN_CONFIG="${HOME}/.m2" \
     PATH=$PATH:${MAVEN_HOME}/bin 
+
+ARG GRADLE_DOWNLOAD_SHA256=f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4
 
 #==============
 # Install packages
@@ -29,8 +30,6 @@ RUN set -o errexit -o nounset \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
-    #
-    # Testing VCSes
     && echo "Testing VCSes" \
     && which bzr \
     && which git \
@@ -38,26 +37,39 @@ RUN set -o errexit -o nounset \
     && which hg \
     && which svn
 
+RUN set -o errexit -o nounset \
+    && echo "Adding gradle user and group" \
+    && groupadd --system --gid 1000 gradle \
+    && useradd --system --gid gradle --uid 1000 --shell /bin/bash --create-home gradle \
+    && mkdir /home/gradle/.gradle \
+    && chown --recursive gradle:gradle /home/gradle \
+    \
+    && echo "Symlinking root Gradle cache to gradle Gradle cache" \
+    && ln --symbolic /home/gradle/.gradle /root/.gradle
+
+VOLUME /home/gradle/.gradle
+
+WORKDIR /home/gradle
+
 #==============
-# Install Maven
+# Install Gradle
 #==============
 
-RUN mkdir -p ${MAVEN_HOME} \
-    && cd /tmp \
-    && set -o errexit -o nounset \
-    && echo "Downloading Maven" \
-    && wget --no-check-certificate "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
-    # \
-    # && echo "Checking download hash" \
-    # && echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
-    # \
-    && echo "Installing Maven" \
-    && tar -xzf "apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "${MAVEN_HOME}" --strip-components=1 \ 
-    && ln -s ${MAVEN_HOME}/bin/mvn /usr/bin/mvn \
-    && rm apache-maven-"${MAVEN_VERSION}"-bin.tar.gz \
-    && rm -rf /tmp/* \
-    && echo "Testing Maven installation" \
-    && mvn -version
+RUN set -o errexit -o nounset \
+    && echo "Downloading Gradle" \
+    && wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+    \
+    && echo "Checking download hash" \
+    && echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+    \
+    && echo "Installing Gradle" \
+    && unzip gradle.zip \
+    && rm gradle.zip \
+    && mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+    && ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle \
+    \
+    && echo "Testing Gradle installation" \
+    && gradle --version
 
 # Mark zsh as default shell
 RUN chsh -s /usr/bin/zsh
@@ -90,4 +102,4 @@ COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
 ENTRYPOINT [ "/bin/zsh" ]
 
-CMD ["mvn"]
+CMD ["gradle"]
