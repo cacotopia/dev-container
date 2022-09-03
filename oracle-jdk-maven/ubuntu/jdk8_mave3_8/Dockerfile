@@ -59,6 +59,8 @@ VOLUME ["/home/maven/.m2"]
 
 WORKDIR /home/maven
 
+COPY ./mvn/settings.xml /home/maven/.m2
+
 #==============
 # Install Maven
 #==============

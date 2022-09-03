@@ -112,23 +112,23 @@ under the License.
     <servers>
         <server>
           <id>yunxiao-releases</id>
-          <username>5ed097a9f3cfd0d0e767b9db</username>
-          <password>KBTh)LG=Rb0N</password>
+          <username>${env.MVN_SERVER_YUNXIAO_USERNAME}</username>
+          <password>${env.MVN_SERVER_YUNXIAO_PASSWORD}</password>
         </server>
         <server>
           <id>yunxiao-snapshots</id>
-          <username>5ed097a9f3cfd0d0e767b9db</username>
-          <password>KBTh)LG=Rb0N</password>
+          <username>${env.MVN_SERVER_YUNXIAO_USERNAME}</username>
+          <password>${env.MVN_SERVER_YUNXIAO_PASSWORD}</password>
         </server>
         <server>
           <id>rdc-releases</id>
-          <username>ZBU8VT</username>
-          <password>I5hyhMAg0B</password>
+          <username>${env.MVN_SERVER_RDC_USERNAME}</username>
+          <password>${env.MVN_SERVER_RDC_PASSWORD}</password>
         </server>
         <server>
           <id>rdc-snapshots</id>
-          <username>ZBU8VT</username>
-          <password>I5hyhMAg0B</password>
+          <username>${env.MVN_SERVER_RDC_USERNAME}</username>
+          <password>${env.MVN_SERVER_RDC_PASSWORD}</password>
         </server>
     </servers>
 
@@ -191,57 +191,6 @@ under the License.
      |
      |-->
     <profiles>
-      <profile>
-        <id>nexus</id>
-        <repositories>
-          <repository>
-            <id>nexus-releases</id>
-            <name>private nexus</name>
-            <url>http://nexus.scm2.bluetron.cn/repository/maven-releases/</url>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-          </repository>
-          <repository>
-            <id>nexus-snapshots</id>
-            <name>private nexus</name>
-            <url>http://nexus.scm2.bluetron.cn/repository/maven-snapshots/</url>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-            <snapshots>
-              <enabled>true</enabled>
-            </snapshots>
-          </repository>
-        </repositories>
-        <pluginRepositories>
-          <pluginRepository>
-            <id>nexus</id>
-            <name>local private nexus</name>
-            <url>http://nexus.scm2.bluetron.cn/repository/maven-releases/</url>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-            <snapshots>
-              <enabled>false</enabled>
-            </snapshots>
-          </pluginRepository>
-          <pluginRepository>
-            <id>nexus-snapshots</id>
-            <name>private nexus</name>
-            <url>http://nexus.scm2.bluetron.cn/repository/maven-snapshots/</url>
-            <releases>
-              <enabled>false</enabled>
-            </releases>
-            <snapshots>
-              <enabled>true</enabled>
-            </snapshots>
-          </pluginRepository>
-        </pluginRepositories>
-      </profile>
     <profile>
               <id>rdc</id>
               <properties>

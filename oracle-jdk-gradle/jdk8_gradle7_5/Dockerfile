@@ -79,7 +79,7 @@ RUN set -o errexit -o nounset \
     && echo "Testing Gradle installation" \
     && gradle --version
 
-# COPY ./mvn/settings.xml $ROOTHOME/.m2/
+
 
 #==============
 # Install ohmyzsh
