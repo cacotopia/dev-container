@@ -110,27 +110,26 @@ under the License.
      | Authentication profiles can be used whenever maven must make a connection to a remote server.
      |-->
     <servers>
-        <!-- server
-         | Specifies the authentication information to use when connecting to a particular server, identified by
-         | a unique name within the system (referred to by the 'id' attribute below).
-         |
-         | NOTE: You should either specify username/password OR privateKey/passphrase, since these pairings are
-         |       used together.
-         |
         <server>
-          <id>deploymentRepo</id>
-          <username>repouser</username>
-          <password>repopwd</password>
+          <id>yunxiao-releases</id>
+          <username>5ed097a9f3cfd0d0e767b9db</username>
+          <password>KBTh)LG=Rb0N</password>
         </server>
-        -->
-
-        <!-- Another sample, using keys to authenticate.
         <server>
-          <id>siteServer</id>
-          <privateKey>/path/to/private/key</privateKey>
-          <passphrase>optional; leave empty if not used.</passphrase>
+          <id>yunxiao-snapshots</id>
+          <username>5ed097a9f3cfd0d0e767b9db</username>
+          <password>KBTh)LG=Rb0N</password>
         </server>
-        -->
+        <server>
+          <id>rdc-releases</id>
+          <username>ZBU8VT</username>
+          <password>I5hyhMAg0B</password>
+        </server>
+        <server>
+          <id>rdc-snapshots</id>
+          <username>ZBU8VT</username>
+          <password>I5hyhMAg0B</password>
+        </server>
     </servers>
 
     <!-- mirrors
@@ -145,20 +144,17 @@ under the License.
      | server for that repository.
      |-->
     <mirrors>
-
         <mirror>
-            <id>mirrors.cloud.tencent.com</id>
-            <mirrorOf>*</mirrorOf>
-            <name>Tencent Cloud</name>
-            <url>http://mirrors.cloud.tencent.com/nexus/repository/maven-public/</url>
+          <id>mirror</id>
+          <mirrorOf>central,jcenter,!nexus-releases,!nexus-snapshots,!rdc-releases,!rdc-snapshots,!yunxiao-releases,!yunxiao-snapshots</mirrorOf>
+          <name>mirror</name>
+          <url>https://maven.aliyun.com/nexus/content/groups/public</url>
         </mirror>
-
         <mirror>
             <id>repo.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/public/</url>
             <mirrorOf>m.g.o-public</mirrorOf>
+            <url>https://repo.jenkins-ci.org/public/</url>
         </mirror>
-
         <!-- mirror
          | Specifies a repository mirror site to use instead of a given repository. The repository that
          | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used
@@ -195,6 +191,163 @@ under the License.
      |
      |-->
     <profiles>
+      <profile>
+        <id>nexus</id>
+        <repositories>
+          <repository>
+            <id>nexus-releases</id>
+            <name>private nexus</name>
+            <url>http://nexus.scm2.bluetron.cn/repository/maven-releases/</url>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+            </snapshots>
+          </repository>
+          <repository>
+            <id>nexus-snapshots</id>
+            <name>private nexus</name>
+            <url>http://nexus.scm2.bluetron.cn/repository/maven-snapshots/</url>
+            <releases>
+              <enabled>false</enabled>
+            </releases>
+            <snapshots>
+              <enabled>true</enabled>
+            </snapshots>
+          </repository>
+        </repositories>
+        <pluginRepositories>
+          <pluginRepository>
+            <id>nexus</id>
+            <name>local private nexus</name>
+            <url>http://nexus.scm2.bluetron.cn/repository/maven-releases/</url>
+            <releases>
+              <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+            </snapshots>
+          </pluginRepository>
+          <pluginRepository>
+            <id>nexus-snapshots</id>
+            <name>private nexus</name>
+            <url>http://nexus.scm2.bluetron.cn/repository/maven-snapshots/</url>
+            <releases>
+              <enabled>false</enabled>
+            </releases>
+            <snapshots>
+              <enabled>true</enabled>
+            </snapshots>
+          </pluginRepository>
+        </pluginRepositories>
+      </profile>
+    <profile>
+              <id>rdc</id>
+              <properties>
+                  <altReleaseDeploymentRepository>
+                      rdc-releases::default::https://repo.rdc.aliyun.com/repository/130852-release-DlKQst/
+                  </altReleaseDeploymentRepository>
+                  <altSnapshotDeploymentRepository>
+                      rdc-snapshots::default::https://repo.rdc.aliyun.com/repository/130852-snapshot-jDCkfp/
+                  </altSnapshotDeploymentRepository>
+              </properties>
+              <repositories>
+                  <repository>
+                      <id>central</id>
+                      <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>false</enabled>
+                      </snapshots>
+                  </repository>
+                  <repository>
+                      <id>snapshots</id>
+                      <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+                      <releases>
+                          <enabled>false</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                  </repository>
+                  <repository>
+                      <id>rdc-releases</id>
+                      <url>https://repo.rdc.aliyun.com/repository/130852-release-DlKQst/</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>false</enabled>
+                      </snapshots>
+                  </repository>
+                  <repository>
+                      <id>rdc-snapshots</id>
+                      <url>https://repo.rdc.aliyun.com/repository/130852-snapshot-jDCkfp/</url>
+                      <releases>
+                          <enabled>false</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                  </repository>
+              </repositories>
+              <pluginRepositories>
+                  <pluginRepository>
+                      <id>central</id>
+                      <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>false</enabled>
+                      </snapshots>
+                  </pluginRepository>
+                  <pluginRepository>
+                      <id>snapshots</id>
+                      <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+                      <releases>
+                          <enabled>false</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                  </pluginRepository>
+                  <pluginRepository>
+                      <id>rdc-releases</id>
+                      <url>https://repo.rdc.aliyun.com/repository/130852-release-DlKQst/</url>
+                      <releases>
+                          <enabled>true</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>false</enabled>
+                      </snapshots>
+                  </pluginRepository>
+                  <pluginRepository>
+                      <id>rdc-snapshots</id>
+                      <url>https://repo.rdc.aliyun.com/repository/130852-snapshot-jDCkfp/</url>
+                      <releases>
+                          <enabled>false</enabled>
+                      </releases>
+                      <snapshots>
+                          <enabled>true</enabled>
+                      </snapshots>
+                  </pluginRepository>
+              </pluginRepositories>
+          </profile>
+      <profile>
+        <id>yunxiao</id>
+        <properties>
+          <altReleaseDeploymentRepository>
+          yunxiao-releases::default::https://packages.aliyun.com/maven/repository/2005362-release-QGTDXb/
+          </altReleaseDeploymentRepository>
+          <altSnapshotDeploymentRepository>
+          yunxiao-snapshots::default::https://packages.aliyun.com/maven/repository/2005362-snapshot-tjUzmN/
+          </altSnapshotDeploymentRepository>
+        </properties>
+      </profile>
         <profile>
             <id>jenkins</id>
             <activation>
@@ -266,27 +419,23 @@ under the License.
          |
         <profile>
           <id>env-dev</id>
-
           <activation>
             <property>
               <name>target-env</name>
               <value>dev</value>
             </property>
           </activation>
-
           <properties>
             <tomcatPath>/path/to/tomcat/instance</tomcatPath>
           </properties>
         </profile>
         -->
     </profiles>
-
     <!-- activeProfiles
      | List of profiles that are active for all builds.
-     |
-    <activeProfiles>
-      <activeProfile>alwaysActiveProfile</activeProfile>
-      <activeProfile>anotherAlwaysActiveProfile</activeProfile>
-    </activeProfiles>
     -->
+    <activeProfiles>
+      <activeProfile>rdc</activeProfile>
+      <activeProfile>yunxiao</activeProfile>
+    </activeProfiles>
 </settings>

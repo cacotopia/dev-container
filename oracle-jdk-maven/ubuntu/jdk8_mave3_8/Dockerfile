@@ -17,7 +17,7 @@ ENV MAVEN_HOME="/opt/maven" \
 #==============
 
 RUN apt-get update --allow-unauthenticated \
-    && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
+    && apt install --allow-unauthenticated --allow -y ca-certificates curl \
            build-essential gcc g++ \
            tzdata zip unzip gzip vim wget \
            git openssh-client zsh bash net-tools tmux sudo wget \
@@ -40,7 +40,7 @@ RUN mkdir -p ${MAVEN_HOME} \
     && rm -rf /tmp/*
 
 # RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.1/zsh-in-docker.sh)" -- \
-COPY ../../zsh/zsh-in-docker.sh /tmp
+COPY ./zsh/zsh-in-docker.sh /tmp
 RUN chmod +x /tmp/zsh-in-docker.sh && \
     /tmp/zsh-in-docker.sh \
     -a 'SPACESHIP_PROMPT_ADD_NEWLINE="false"' \
@@ -55,12 +55,12 @@ RUN chmod +x /tmp/zsh-in-docker.sh && \
     -a 'bindkey "\$terminfo[kcud1]" history-substring-search-down'
 
 # Copy local config to p10k zsh
-COPY ../../zsh/.p10k.zsh $ROOTHOME/
-COPY ../../zsh/.tmux.conf $ROOTHOME/
+COPY ./zsh/.p10k.zsh $ROOTHOME/
+COPY ./zsh/.tmux.conf $ROOTHOME/
 
 RUN mkdir $ROOTHOME/.m2
 
-COPY ../../mvn/settings.xml $ROOTHOME/.m2/
+COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
 ENTRYPOINT [ "/bin/zsh" ]
 
