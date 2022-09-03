@@ -17,7 +17,7 @@ ENV MAVEN_HOME="/opt/maven" \
 #==============
 
 RUN apt-get update --allow-unauthenticated \
-    && apt install --allow-unauthenticated --allow -y ca-certificates curl \
+    && apt install --allow-unauthenticated --allow-change-held-packages -y ca-certificates curl \
            build-essential gcc g++ \
            tzdata zip unzip gzip vim wget \
            git openssh-client zsh bash net-tools tmux sudo wget \
