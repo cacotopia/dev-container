@@ -1,4 +1,4 @@
-ARG ORACLE_JDK_VERSION=jdk-8u202
+ARG ORACLE_JDK_VERSION=jdk-8u202-ubuntu
 
 FROM cacotopia/oracle-jdk:${ORACLE_JDK_VERSION}
 
@@ -9,21 +9,27 @@ ENV ROOTHOME=/root
 
 ENV HOME=$ROOTHOME
 
-ENV MAVEN_HOME="/usr/local/lib/apache-maven-3.8.6" \
+ENV MAVEN_HOME="/opt/maven" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
-# RUN apt-get update --allow-unauthenticated \
-#     && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
-#            build-essential gcc g++ \
-#            tzdata zip unzip vim wget \
-#            git openssh-client zsh bash net-tools tmux sudo wget \
-#     #
-#     # Clean up
-#     && apt-get autoremove -y \
-#     && apt-get clean -y \
-#     && rm -rf /var/lib/apt/lists/* 
+#==============
+# Install packages
+#==============
 
-# install maven
+RUN apt-get update --allow-unauthenticated \
+    && apt install --allow-unauthenticated --force-yes -y ca-certificates curl \
+           build-essential gcc g++ \
+           tzdata zip unzip gzip vim wget \
+           git openssh-client zsh bash net-tools tmux sudo wget \
+    #
+    # Clean up
+    && apt-get autoremove -y \
+    && apt-get clean -y \
+    && rm -rf /var/lib/apt/lists/* 
+
+#==============
+# Install Maven
+#==============
 
 RUN mkdir -p ${MAVEN_HOME} \
     && cd /tmp \
