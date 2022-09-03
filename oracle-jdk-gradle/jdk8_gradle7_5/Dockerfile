@@ -10,8 +10,8 @@ ENV HOME=$ROOTHOME
 
 ENV GRADLE_HOME="/opt/gradle" \
     GRADLE_VERSION="7.5.1" \
-    GRADLE_CONFIG="${HOME}/.m2" \
-    PATH=$PATH:${MAVEN_HOME}/bin 
+    GRADLE_CONFIG="${HOME}/.gradle" \
+    PATH=$PATH:${GRADLE_HOME}/bin 
 
 ARG GRADLE_DOWNLOAD_SHA256=f6b8596b10cce501591e92f229816aa4046424f3b24d771751b06779d58c8ec4
 
@@ -38,6 +38,13 @@ RUN set -o errexit -o nounset \
     && which hg \
     && which svn
 
+# Mark zsh as default shell
+RUN chsh -s /usr/bin/zsh
+
+#==============
+# Add Group And User
+#==============
+
 RUN set -o errexit -o nounset \
     && echo "Adding gradle user and group" \
     && groupadd --system --gid 1000 gradle \
@@ -46,9 +53,9 @@ RUN set -o errexit -o nounset \
     && chown --recursive gradle:gradle /home/gradle \
     \
     && echo "Symlinking root Gradle cache to gradle Gradle cache" \
-    && ln --symbolic /home/gradle/.gradle /root/.gradle
+    && ln --symbolic /home/gradle/.gradle "${GRADLE_CONFIG}"
 
-VOLUME /home/gradle/.gradle
+VOLUME ["/home/gradle/.gradle"]
 
 WORKDIR /home/gradle
 
@@ -72,8 +79,7 @@ RUN set -o errexit -o nounset \
     && echo "Testing Gradle installation" \
     && gradle --version
 
-# Mark zsh as default shell
-RUN chsh -s /usr/bin/zsh
+# COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
 #==============
 # Install ohmyzsh
@@ -97,10 +103,6 @@ RUN chsh -s /usr/bin/zsh
 # COPY ./zsh/.p10k.zsh $ROOTHOME/
 # COPY ./zsh/.tmux.conf $ROOTHOME/
 
-RUN mkdir $ROOTHOME/.m2
-
-# COPY ./mvn/settings.xml $ROOTHOME/.m2/
-
-ENTRYPOINT [ "/bin/zsh" ]
+# ENTRYPOINT [ "/bin/zsh" ]
 
 CMD ["gradle"]

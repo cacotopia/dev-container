@@ -16,7 +16,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
     JAVA_HOME=/opt/java \
     PATH=$PATH:${JAVA_HOME}/bin 
 
-RUN \
+#==============
+# Install packages
+#==============
+
+RUN set -o errexit -o nounset \
   apt-get -y update && \
   apt-get -y install software-properties-common && \
   apt-get -y install apt-utils ca-certificates curl wget unzip && \
@@ -43,10 +47,13 @@ ENV LC_ALL en_US.UTF-8
 RUN \
     mkdir -p  "${JAVA_HOME}" \
     && cd /tmp \
+    && set -o errexit -o nounset \
 ##    && curl -Ls \
 ##        --cookie "oraclelicense=accept-securebackup-cookie;" \
 ##        "${JAVA_BASE_URL}/jdk/${JAVA_VERSION}"+"${JAVA_BUILD}"/"${JAVA_SIG}"/jdk-"${JAVA_VERSION}"_linux-x64_bin.tar.gz \
+    && echo "Downloading Oracle JDK" \
     && wget --no-check-certificate "${JAVA_BASE_MIRRORS_URL}/jdk/${JAVA_VERSION}u${JAVA_UPDATE}-b${JAVA_UPDATE_SMALL_VERSION}/jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-x64.tar.gz" \
+    && echo "Installing Oracle JDK" \
     && tar -xzf "jdk-${JAVA_VERSION}u${JAVA_UPDATE}-linux-x64.tar.gz" -C "${JAVA_HOME}" --strip-components=1 \
     && ln -s ${JAVA_HOME}/bin/* /usr/bin/ \
     && rm -rf "${JAVA_HOME}/"*src.zip \
@@ -54,10 +61,14 @@ RUN \
     && unzip -jo -d "${JAVA_HOME}/jre/lib/security" "jce_policy-${JAVA_VERSION}.zip" \
     && rm "${JAVA_HOME}/jre/lib/security/README.txt" \
     && rm -rf /tmp/* \
+    && echo "Configuring Oracle JDK installation" \
     && update-alternatives --install "/usr/bin/java" "java" "${JAVA_HOME}/bin/java" 1 \
     && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 \
     && update-alternatives --set java "${JAVA_HOME}/bin/java" \
-    && update-alternatives --set javac "${JAVA_HOME}/bin/javac"
+    && update-alternatives --set javac "${JAVA_HOME}/bin/javac" \
+    && echo "Testing Oracle JDK installation" \
+    && java -version \
+    && javac -version
 
 #==============
 # Show version

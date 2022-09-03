@@ -10,7 +10,7 @@ ENV ROOTHOME=/root
 ENV HOME=$ROOTHOME
 
 ENV MAVEN_HOME="/opt/maven" \
-    MAVEN_CONFIG="${HOME}/.m2" \
+    ROOT_MAVEN_CONFIG="${ROOTHOME}/.m2" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
 #==============
@@ -38,6 +38,29 @@ RUN set -o errexit -o nounset \
     && which hg \
     && which svn
 
+# Mark zsh as default shell
+RUN chsh -s /usr/bin/zsh
+
+#==============
+# Add Group And User
+#==============
+
+RUN set -o errexit -o nounset \
+    && echo "Adding maven user and group" \
+    && groupadd --system --gid 1000 maven \
+    && useradd --system --gid maven --uid 1000 --shell /bin/bash --create-home maven \
+    && mkdir /home/maven/.m2 \
+    && chown --recursive maven:maven /home/maven \
+    \
+    && echo "Symlinking root Maven cache to maven Maven cache" \
+    && ln --symbolic /home/maven/.m2 "${ROOT_MAVEN_CONFIG}"
+
+RUN mkdir $ROOTHOME/.m2
+
+VOLUME ["/home/maven/.m2"]
+
+WORKDIR /home/maven
+
 #==============
 # Install Maven
 #==============
@@ -58,9 +81,6 @@ RUN mkdir -p ${MAVEN_HOME} \
     && rm -rf /tmp/* \
     && echo "Testing Maven installation" \
     && mvn -version
-
-# Mark zsh as default shell
-RUN chsh -s /usr/bin/zsh
 
 #==============
 # Install ohmyzsh
@@ -84,11 +104,7 @@ RUN chsh -s /usr/bin/zsh
 # COPY ./zsh/.p10k.zsh $ROOTHOME/
 # COPY ./zsh/.tmux.conf $ROOTHOME/
 
-RUN mkdir $ROOTHOME/.m2
-
-COPY ./mvn/settings.xml $ROOTHOME/.m2/
-
 # ENTRYPOINT [ "/bin/zsh" ]
 
-# CMD ["-l"]
-CMD ["mvn"]
+CMD ["-l"]
+# CMD ["mvn"]
