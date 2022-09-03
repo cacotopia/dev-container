@@ -54,9 +54,9 @@ RUN \
     && unzip -jo -d "${JAVA_HOME}/jre/lib/security" "jce_policy-${JAVA_VERSION}.zip" \
     && rm "${JAVA_HOME}/jre/lib/security/README.txt" \
     && rm -rf /tmp/* \
-    && update-alternatives --install "/usr/bin/java" "java" "${JAVA_HOME}/bin/java" 1 && \
-    && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
-    && update-alternatives --set java "${JAVA_HOME}/bin/java" && \
+    && update-alternatives --install "/usr/bin/java" "java" "${JAVA_HOME}/bin/java" 1 \
+    && update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 \
+    && update-alternatives --set java "${JAVA_HOME}/bin/java" \
     && update-alternatives --set javac "${JAVA_HOME}/bin/javac"
 
 #==============
