@@ -55,8 +55,6 @@ RUN set -o errexit -o nounset \
     && echo "Symlinking root Maven cache to maven Maven cache" \
     && ln --symbolic /home/maven/.m2 "${ROOT_MAVEN_CONFIG}"
 
-RUN mkdir $ROOTHOME/.m2
-
 VOLUME ["/home/maven/.m2"]
 
 WORKDIR /home/maven
