@@ -20,7 +20,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Install packages
 #==============
 
-RUN set -o errexit -o nounset \
+RUN set -o errexit -o nounset && \
   apt-get -y update && \
   apt-get -y install software-properties-common && \
   apt-get -y install apt-utils ca-certificates curl wget unzip && \
