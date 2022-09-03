@@ -4,7 +4,7 @@ SHELL=/bin/bash
 NAMESPACE = cacotopia
 NAME = oracle-jdk-maven
 FULLNAME = $(NAMESPACE)/$(NAME)
-TAG = jdk-8u202-mvn-3.8.1
+TAG = jdk-8u202-mvn-3.8.6
 LATEST_TAG = latest
 
 .DEFAULT_GOAL := help
