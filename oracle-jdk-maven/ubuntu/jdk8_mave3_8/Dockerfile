@@ -10,6 +10,7 @@ ENV ROOTHOME=/root
 ENV HOME=$ROOTHOME
 
 ENV MAVEN_HOME="/opt/maven" \
+    MAVEN_CONFIG="${HOME}/.m2" \
     PATH=$PATH:${MAVEN_HOME}/bin 
 
 #==============
@@ -70,4 +71,4 @@ COPY ./mvn/settings.xml $ROOTHOME/.m2/
 
 ENTRYPOINT [ "/bin/zsh" ]
 
-CMD ["-l"]
+CMD ["mvn"]
